@@ -1883,17 +1883,17 @@ fn make_dynamic_opened_binds(config: &Config) -> Vec<Bind> {
 
     for bind in &config.binds.0 {
         let action = match &bind.action {
-            Action::FocusColumnRight
+            Action::FocusColumnRight(_)
             | Action::FocusColumnRightOrFirst
-            | Action::FocusColumnOrMonitorRight
-            | Action::FocusWindowDownOrColumnRight => Action::MruAdvance {
+            | Action::FocusColumnOrMonitorRight(_)
+            | Action::FocusWindowDownOrColumnRight(_) => Action::MruAdvance {
                 direction: MruDirection::Forward,
                 scope: None,
                 filter: None,
             },
-            Action::FocusColumnLeft
+            Action::FocusColumnLeft(_)
             | Action::FocusColumnLeftOrLast
-            | Action::FocusColumnOrMonitorLeft
+            | Action::FocusColumnOrMonitorLeft(_)
             | Action::FocusWindowUpOrColumnLeft => Action::MruAdvance {
                 direction: MruDirection::Backward,
                 scope: None,

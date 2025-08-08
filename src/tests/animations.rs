@@ -98,7 +98,7 @@ fn set_up_two_in_column() -> (Fixture, ClientId, WlSurface, WlSurface) {
     let _ = f.client(id).window(&surface2).recent_configures();
 
     // Consume into one column.
-    f.niri().layout.focus_left();
+    f.niri().layout.focus_left(false);
     f.niri().layout.consume_into_column();
     f.double_roundtrip(id);
 

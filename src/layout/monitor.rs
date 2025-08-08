@@ -439,8 +439,15 @@ impl<W: LayoutElement> Monitor<W> {
         self.add_workspace_at(self.workspaces.len());
     }
 
-    pub fn activate_workspace(&mut self, idx: usize) {
-        self.activate_workspace_with_anim_config(idx, None);
+    pub fn activate_workspace(&mut self, idx: usize, skip_animation: bool) {
+        self.activate_workspace_with_anim_config(
+            idx,
+            if skip_animation {
+                Some(Default::default())
+            } else {
+                None
+            },
+        );
     }
 
     pub fn activate_workspace_with_anim_config(
@@ -568,8 +575,10 @@ impl<W: LayoutElement> Monitor<W> {
             workspace_idx += 1;
         }
 
+        let SKIP_ANIMATION = false;
+
         if activate {
-            self.activate_workspace(workspace_idx);
+            self.activate_workspace(workspace_idx, SKIP_ANIMATION);
         }
     }
 
@@ -616,7 +625,8 @@ impl<W: LayoutElement> Monitor<W> {
         }
 
         if allow_to_activate_workspace && activate.map_smart(|| false) {
-            self.activate_workspace(workspace_idx);
+            let SKIP_ANIMATION = false;
+            self.activate_workspace(workspace_idx, SKIP_ANIMATION);
         }
     }
 
@@ -643,7 +653,8 @@ impl<W: LayoutElement> Monitor<W> {
         // therefore cannot be the last one, so we never need to insert a new empty workspace.
 
         if allow_to_activate_workspace && activate {
-            self.activate_workspace(workspace_idx);
+            let SKIP_ANIMATION = false;
+            self.activate_workspace(workspace_idx, SKIP_ANIMATION);
         }
     }
 
@@ -740,7 +751,7 @@ impl<W: LayoutElement> Monitor<W> {
 
         if activate {
             self.workspace_switch = None;
-            self.activate_workspace(idx);
+            self.activate_workspace(idx, false);
         }
 
         self.workspace_switch = None;
@@ -796,15 +807,15 @@ impl<W: LayoutElement> Monitor<W> {
         }
     }
 
-    pub fn focus_window_or_workspace_down(&mut self) {
+    pub fn focus_window_or_workspace_down(&mut self, skip_animation: bool) {
         if !self.active_workspace().focus_down() {
-            self.switch_workspace_down();
+            self.switch_workspace_down(skip_animation);
         }
     }
 
-    pub fn focus_window_or_workspace_up(&mut self) {
+    pub fn focus_window_or_workspace_up(&mut self, skip_animation: bool) {
         if !self.active_workspace().focus_up() {
-            self.switch_workspace_up();
+            self.switch_workspace_up(skip_animation);
         }
     }
 
@@ -971,7 +982,7 @@ impl<W: LayoutElement> Monitor<W> {
         column.set_anim_y_between_workspaces();
     }
 
-    pub fn switch_workspace_up(&mut self) {
+    pub fn switch_workspace_up(&mut self, skip_animation: bool) {
         let new_idx = match &self.workspace_switch {
             // During a DnD scroll, select the prev apparent workspace.
             Some(WorkspaceSwitch::Gesture(gesture)) if gesture.dnd_last_event_time.is_some() => {
@@ -982,10 +993,10 @@ impl<W: LayoutElement> Monitor<W> {
             _ => self.active_workspace_idx.saturating_sub(1),
         };
 
-        self.activate_workspace(new_idx);
+        self.activate_workspace(new_idx, skip_animation);
     }
 
-    pub fn switch_workspace_down(&mut self) {
+    pub fn switch_workspace_down(&mut self, skip_animation: bool) {
         let new_idx = match &self.workspace_switch {
             // During a DnD scroll, select the next apparent workspace.
             Some(WorkspaceSwitch::Gesture(gesture)) if gesture.dnd_last_event_time.is_some() => {
@@ -996,7 +1007,7 @@ impl<W: LayoutElement> Monitor<W> {
             _ => min(self.active_workspace_idx + 1, self.workspaces.len() - 1),
         };
 
-        self.activate_workspace(new_idx);
+        self.activate_workspace(new_idx, skip_animation);
     }
 
     fn previous_workspace_idx(&self) -> Option<usize> {
@@ -1005,7 +1016,8 @@ impl<W: LayoutElement> Monitor<W> {
     }
 
     pub fn switch_workspace(&mut self, idx: usize) {
-        self.activate_workspace(min(idx, self.workspaces.len() - 1));
+        let SKIP_ANIMATION = false;
+        self.activate_workspace(min(idx, self.workspaces.len() - 1), SKIP_ANIMATION);
     }
 
     pub fn switch_workspace_auto_back_and_forth(&mut self, idx: usize) {
@@ -1259,7 +1271,8 @@ impl<W: LayoutElement> Monitor<W> {
         }
 
         let previous_workspace_id = self.previous_workspace_id;
-        self.activate_workspace(new_idx);
+        let SKIP_ANIMATION = false;
+        self.activate_workspace(new_idx, SKIP_ANIMATION);
         self.workspace_switch = None;
         self.previous_workspace_id = previous_workspace_id;
 
@@ -1285,7 +1298,8 @@ impl<W: LayoutElement> Monitor<W> {
         }
 
         let previous_workspace_id = self.previous_workspace_id;
-        self.activate_workspace(new_idx);
+        let SKIP_ANIMATION = false;
+        self.activate_workspace(new_idx, SKIP_ANIMATION);
         self.workspace_switch = None;
         self.previous_workspace_id = previous_workspace_id;
 
