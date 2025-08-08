@@ -212,8 +212,8 @@ fn collect_actions(config: &Config) -> Vec<&Action> {
 
     actions.extend(&[
         &Action::CloseWindow,
-        &Action::FocusColumnLeft,
-        &Action::FocusColumnRight,
+        &Action::FocusColumnLeft(false),
+        &Action::FocusColumnRight(false),
         &Action::MoveColumnLeft,
         &Action::MoveColumnRight,
         &Action::FocusWorkspaceDown,
@@ -460,8 +460,8 @@ fn action_name(action: &Action) -> String {
         Action::Quit(_) => String::from("Exit niri"),
         Action::ShowHotkeyOverlay => String::from("Show Important Hotkeys"),
         Action::CloseWindow => String::from("Close Focused Window"),
-        Action::FocusColumnLeft => String::from("Focus Column to the Left"),
-        Action::FocusColumnRight => String::from("Focus Column to the Right"),
+        Action::FocusColumnLeft(_) => String::from("Focus Column to the Left"),
+        Action::FocusColumnRight(_) => String::from("Focus Column to the Right"),
         Action::MoveColumnLeft => String::from("Move Column Left"),
         Action::MoveColumnRight => String::from("Move Column Right"),
         Action::FocusWorkspaceDown => String::from("Switch Workspace Down"),

@@ -1078,8 +1078,8 @@ impl Op {
                 }
                 layout.toggle_windowed_fullscreen(&id);
             }
-            Op::FocusColumnLeft => layout.focus_left(),
-            Op::FocusColumnRight => layout.focus_right(),
+            Op::FocusColumnLeft => layout.focus_left(false),
+            Op::FocusColumnRight => layout.focus_right(false),
             Op::FocusColumnFirst => layout.focus_column_first(),
             Op::FocusColumnLast => layout.focus_column_last(),
             Op::FocusColumnRightOrFirst => layout.focus_column_right_or_first(),
@@ -1107,7 +1107,7 @@ impl Op {
                     return;
                 };
 
-                layout.focus_column_left_or_output(&output);
+                layout.focus_column_left_or_output(&output, false);
             }
             Op::FocusColumnOrMonitorRight(id) => {
                 let name = format!("output{id}");
@@ -1115,7 +1115,7 @@ impl Op {
                     return;
                 };
 
-                layout.focus_column_right_or_output(&output);
+                layout.focus_column_right_or_output(&output, false);
             }
             Op::FocusWindowDown => layout.focus_down(),
             Op::FocusWindowUp => layout.focus_up(),
