@@ -107,6 +107,19 @@ pub struct Animation {
     pub kind: Kind,
 }
 
+impl Default for Animation {
+    fn default() -> Self {
+        Animation {
+            off: true,
+            kind: Kind::Spring(SpringParams {
+                damping_ratio: 0.,
+                stiffness: 0,
+                epsilon: 0.,
+            }),
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Kind {
     Easing(EasingParams),

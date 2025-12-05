@@ -182,8 +182,8 @@ pub enum Action {
     ),
     FocusWindowUpOrColumnLeft,
     FocusWindowUpOrColumnRight,
-    FocusWindowOrWorkspaceDown,
-    FocusWindowOrWorkspaceUp,
+    FocusWindowOrWorkspaceDown(#[knuffel(property(name = "skip-animation"), default = false)] bool),
+    FocusWindowOrWorkspaceUp(#[knuffel(property(name = "skip-animation"), default = false)] bool),
     FocusWindowTop,
     FocusWindowBottom,
     FocusWindowDownOrTop,
@@ -216,10 +216,10 @@ pub enum Action {
     #[knuffel(skip)]
     CenterWindowById(u64),
     CenterVisibleColumns,
-    FocusWorkspaceDown,
+    FocusWorkspaceDown(#[knuffel(property(name = "skip-animation"), default = false)] bool),
     #[knuffel(skip)]
     FocusWorkspaceDownUnderMouse,
-    FocusWorkspaceUp,
+    FocusWorkspaceUp(#[knuffel(property(name = "skip-animation"), default = false)] bool),
     #[knuffel(skip)]
     FocusWorkspaceUpUnderMouse,
     FocusWorkspace(#[knuffel(argument)] WorkspaceReference),
@@ -451,6 +451,12 @@ impl From<niri_ipc::Action> for Action {
             niri_ipc::Action::FocusColumnLeft {
                 skip_animation: Some(skip_animation),
             } => Self::FocusColumnLeft(skip_animation),
+            niri_ipc::Action::FocusColumnRight {
+                skip_animation: None,
+            } => Self::FocusColumnRight(false),
+            niri_ipc::Action::FocusColumnRight {
+                skip_animation: Some(skip_animation),
+            } => Self::FocusColumnRight(skip_animation),
             niri_ipc::Action::FocusColumnFirst {} => Self::FocusColumnFirst,
             niri_ipc::Action::FocusColumnLast {} => Self::FocusColumnLast,
             niri_ipc::Action::FocusColumnRightOrFirst {} => Self::FocusColumnRightOrFirst,
@@ -486,8 +492,18 @@ impl From<niri_ipc::Action> for Action {
             } => Self::FocusWindowDownOrColumnRight(skip_animation),
             niri_ipc::Action::FocusWindowUpOrColumnLeft {} => Self::FocusWindowUpOrColumnLeft,
             niri_ipc::Action::FocusWindowUpOrColumnRight {} => Self::FocusWindowUpOrColumnRight,
-            niri_ipc::Action::FocusWindowOrWorkspaceDown {} => Self::FocusWindowOrWorkspaceDown,
-            niri_ipc::Action::FocusWindowOrWorkspaceUp {} => Self::FocusWindowOrWorkspaceUp,
+            niri_ipc::Action::FocusWindowOrWorkspaceDown {
+                skip_animation: None,
+            } => Self::FocusWindowOrWorkspaceDown(false),
+            niri_ipc::Action::FocusWindowOrWorkspaceDown {
+                skip_animation: Some(skip_animation),
+            } => Self::FocusWindowOrWorkspaceDown(skip_animation),
+            niri_ipc::Action::FocusWindowOrWorkspaceUp {
+                skip_animation: None,
+            } => Self::FocusWindowOrWorkspaceUp(false),
+            niri_ipc::Action::FocusWindowOrWorkspaceUp {
+                skip_animation: Some(skip_animation),
+            } => Self::FocusWindowOrWorkspaceUp(skip_animation),
             niri_ipc::Action::FocusWindowTop {} => Self::FocusWindowTop,
             niri_ipc::Action::FocusWindowBottom {} => Self::FocusWindowBottom,
             niri_ipc::Action::FocusWindowDownOrTop {} => Self::FocusWindowDownOrTop,
@@ -531,8 +547,18 @@ impl From<niri_ipc::Action> for Action {
             niri_ipc::Action::CenterWindow { id: None } => Self::CenterWindow,
             niri_ipc::Action::CenterWindow { id: Some(id) } => Self::CenterWindowById(id),
             niri_ipc::Action::CenterVisibleColumns {} => Self::CenterVisibleColumns,
-            niri_ipc::Action::FocusWorkspaceDown {} => Self::FocusWorkspaceDown,
-            niri_ipc::Action::FocusWorkspaceUp {} => Self::FocusWorkspaceUp,
+            niri_ipc::Action::FocusWorkspaceDown {
+                skip_animation: None,
+            } => Self::FocusWorkspaceDown(false),
+            niri_ipc::Action::FocusWorkspaceDown {
+                skip_animation: Some(skip_animation),
+            } => Self::FocusWorkspaceDown(skip_animation),
+            niri_ipc::Action::FocusWorkspaceUp {
+                skip_animation: None,
+            } => Self::FocusWorkspaceUp(false),
+            niri_ipc::Action::FocusWorkspaceUp {
+                skip_animation: Some(skip_animation),
+            } => Self::FocusWorkspaceUp(skip_animation),
             niri_ipc::Action::FocusWorkspace { reference } => {
                 Self::FocusWorkspace(WorkspaceReference::from(reference))
             }

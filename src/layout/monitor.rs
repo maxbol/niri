@@ -724,7 +724,7 @@ impl<W: LayoutElement> Monitor<W> {
 
         if activate {
             self.workspace_switch = None;
-            self.activate_workspace(idx);
+            self.activate_workspace(idx, false);
         }
 
         self.workspace_switch = None;
